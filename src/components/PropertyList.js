@@ -1,12 +1,12 @@
-import React, { Component, Fragment } from 'react';
+import React, { Component, Link, Fragment } from 'react';
 import { connect } from 'react-redux';
 import _ from 'lodash';
-import { fetchProducts, cardView } from "../actions";
+import { fetchProperties } from "../actions";
 
-class ProductList extends Component {
+class PropertyList extends Component {
 
   constructor(props) {
-    super(props)
+    super(props);
 
     this.state = {
       cardView: true
@@ -14,7 +14,7 @@ class ProductList extends Component {
   }
 
   componentDidMount(){
-    this.props.fetchProducts();
+    this.props.fetchProperties();
   }
 
   renderProductsAsCards() {
@@ -44,7 +44,12 @@ class ProductList extends Component {
                       </div>
                     </Fragment>
                   </div>
-                  <a href="" target="_blank" className="link-to-details ember-view"></a>
+                  <a target="_blank" href={`/property/${property.id}`} className="link-to-details ember-view" >
+                    View
+                  </a>
+                  {/*<Link to={ property.id } >
+                    View Details
+                  </Link>*/}
                 </div>
                 <div className="property-stats">
                   <div className="property-stats-item current-rent">
@@ -78,8 +83,9 @@ class ProductList extends Component {
                 </div>
 
                 <div className="property-address     ">
-                  <span data-test-street-address="" className="street">{property.address.address1}</span><br />
-                  <span data-test-city-state-zip="" className="csz">{property.address.city}, {property.address.state} {property.address.zip}</span>
+                  <span data-test-street-address="" className="street">{property.address ? property.address.address1 : ''}</span><br />
+                  <span data-test-city-state-zip="" className="csz">{property.address ? property.address.city : ''},&nbsp;
+                    {property.address ? property.address.state : ''} {property.address ? property.address.zip : ''}</span>
                 </div>
               </Fragment>
             </div>
@@ -95,11 +101,12 @@ class ProductList extends Component {
         <tr key={property.id} id="ember{property.id}" className="__2ef67 ember-view" >
 
           <td className="image-column roof-category-coding-row">
-            <div className="roof-category-coding-cell offer "></div>
+            <div className="roof-category-coding-cell offer ">
+            </div>
             <div id="ember3033" className="roof-photo-primary-small __be9c7 ember-view">
               <div className="roof-photo">
                 <a title="See Details"
-                   href="/investment-property-details/wisconsin/2858-n-60th-st-milwaukee-53210/1696411" id="ember3034"
+                   target="_blank" href={`/property/${property.id}`} id="ember3034"
                    className="ember-view">
                   <img src={property.mainImageUrl ? property.mainImageUrl : 'https://via.placeholder.com/640x428'}
                   alt=""
@@ -110,13 +117,14 @@ class ProductList extends Component {
           </td>
           <td className="roof-pull-left cell text-left">
             <a title="View Roof Details"
-               href="/investment-property-details/wisconsin/2858-n-60th-st-milwaukee-53210/1696411" id="ember3035"
+               target="_blank" href={`/property/${property.id}`} id="ember3035"
                className="with-hover ember-view"> {property.address.address1}
               <div className="city-state-zip">
                 {property.address.city}, {property.address.state} {property.address.zip}
               </div>
             </a>
-            <div id="ember3036" className="__55d2d ember-view"></div>
+            <div id="ember3036" className="__55d2d ember-view">
+            </div>
           </td>
           <td >
             <span className="symbol-dollar">$</span>{property.financial ? property.financial.listPrice: 'TBD'}
@@ -132,22 +140,22 @@ class ProductList extends Component {
           <td><span className="symbol-dollar">$</span>22,131</td>
           <td>15.9<span className="symbol-percent">%</span></td>
           <td className="cell">{property.physical ? property.physical.yearBuilt : '(Not Mentioned)'}</td>
-          <td><span id="ember3041" className="__e3a38 ember-view"></span></td>
+          <td><span id="ember3041" className="__e3a38 ember-view">
+          </span></td>
           <td className="action-column text-center">
-        <span id="ember3050" className="ember-view">  <a href="#" title="Click to save this property."
-                                                         data-test-roof-action-save="" className="roof-action-save  "
-                                                         data-ember-action="" data-ember-action-3051="3051">
-    <span className="hidden-xs hidden-sm">
+            <span id="ember3050" className="ember-view">
+              <a href="#" title="Click to save this property." className="roof-action-save">
+                <span className="hidden-xs hidden-sm">
 
-    </span>
-        <i className="fal fa-heart"></i>
-        </a>
-
-        </span>
+                </span>
+                <i className="fal fa-heart">
+                </i>
+              </a>
+            </span>
           </td>
           <td className="action-column text-center roof-details-link">
             <a title="View Roof Details"
-               href="/investment-property-details/wisconsin/2858-n-60th-st-milwaukee-53210/1696411" id="ember3061"
+               target="_blank" href={`/property/${property.id}`} id="ember3061"
                className="btn btn-fixed-size roof-action-view btn-secondary  ember-view"> See Details
             </a>
           </td>
@@ -163,21 +171,22 @@ class ProductList extends Component {
   };
 
   render() {
-    console.log(this.state.cardView)
     return (
       <div>
         <div className="container">
           <div className="toggle-card-list ">
             <div className="btn-group">
-              <button className="btn btn-default"
+              <button className={`btn ${this.state.cardView ? 'btn-default': ''}`}
                       onClick={this.handleToggleView.bind(this, true)}>
                 <i data-test-card-view-icon="" className="fas fa-th-large fa-lg active">
-                </i>
+                </i><br />
+                <small>Cards</small>
               </button>
-              <button className="btn "
+              <button className={`btn ${this.state.cardView ? '': 'btn-default'}`}
                       onClick={this.handleToggleView.bind(this, false)}>
                 <i data-test-list-view-icon="" className="far fa-bars fa-lg ">
-                </i>
+                </i><br />
+                <small>List</small>
               </button>
             </div>
           </div>
@@ -280,4 +289,4 @@ const mapStateToProps = (state) => ({
   properties: state.properties
 });
 
-export default connect(mapStateToProps, { fetchProducts, cardView })(ProductList);
+export default connect(mapStateToProps, { fetchProperties })(PropertyList);

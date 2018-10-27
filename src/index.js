@@ -2,10 +2,11 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 import { createStore, applyMiddleware } from 'redux';
-import { BrowserRouter, Route } from 'react-router-dom';
+import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import promise from 'redux-promise';
 import rootReducer from './reducers';
-import ProductList from './components/ProductList';
+import PropertyList from './components/PropertyList';
+import PropertyDetails from './components/PropertyDetails';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
@@ -18,7 +19,10 @@ ReactDOM.render(
   <Provider store={createStoreWithMiddleware(rootReducer)}>
     <BrowserRouter>
       <div>
-        <Route path='/' component={ProductList} />
+        <Switch>
+          <Route path='/property/:id' component={PropertyDetails} />
+          <Route path='/' component={PropertyList} />
+        </Switch>
       </div>
     </BrowserRouter>
   </Provider>

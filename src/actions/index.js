@@ -1,18 +1,19 @@
 import axios from 'axios';
 
-import { FETCH_PRODUCTS, CARD_VIEW } from "./types";
+import { FETCH_PROPERTIES, FETCH_PROPERTY_DETAILS } from "./types";
 
-export const fetchProducts = () => {
+export const fetchProperties = () => {
   const request = axios.get('properties.json');
   return {
-    type: FETCH_PRODUCTS,
+    type: FETCH_PROPERTIES,
     payload: request
   };
 };
 
-export const cardView = (bool) => {
+export function fetchPropertyDetails(id) {
+  // console.log('ID', id);
   return {
-    type: CARD_VIEW,
-    payload: {bool}
-  };
-};
+    type: FETCH_PROPERTY_DETAILS,
+    payload: id
+  }
+}
